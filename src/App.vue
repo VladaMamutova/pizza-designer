@@ -13,7 +13,7 @@
     <div id="container">
       <div class="page-content">
         <div class="constructor">
-          <img v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
+          <img v-show="hasIngredientInOrder(ingredient.id)" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
         </div>
         <div class="ingredients-grid">
           <div class="ingredient-item" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
@@ -24,7 +24,7 @@
             </p>
           </div>
         </div>
-        <p>Общая стоимость: {{ fullPrice }} руб.</p>
+        <p>Общая стоимость: {{ orderSum }} руб.</p>
       </div>
     </div>
   </div>
@@ -41,7 +41,6 @@ export default {
       width: 400,
       restaurantIsOpen: true,
       pizzaSizes: [35, 40],
-      fullPrice: 0,
       pizzaIngredients: [
         {
           id: 1,
@@ -61,15 +60,36 @@ export default {
           price: 30,
           img: 'static/images/tomato.png'
         }
-      ]
+      ],
+      order: {
+        ingredients: [],
+        fullPrice: 0
+      }
     }
   },
   methods: {
     addToPizza: function (ingredient) {
-      this.fullPrice += ingredient.price
+      this.order.ingredients.push(ingredient.id)
+      this.order.fullPrice += ingredient.price
     },
     deleteFromPizza (ingredient) {
-      this.fullPrice -= ingredient.price
+      let index = this.order.ingredients.indexOf(ingredient.id)
+      if (index !== -1) {
+        this.order.ingredients.splice(index, 1)
+        this.order.fullPrice -= ingredient.price
+      }
+    },
+    hasIngredientInOrder (ingredientId) {
+      if (this.order.ingredients.indexOf(ingredientId) !== -1) {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
+  computed: {
+    orderSum () {
+      return this.order.fullPrice
     }
   }
 }
