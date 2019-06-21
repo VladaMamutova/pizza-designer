@@ -17,14 +17,23 @@
         </div>
         <div class="ingredients-grid">
           <div class="ingredient-item" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
-            <p>{{ ingredient.name }} - {{ingredient.price }} руб.</p>
-            <p style="margin: 0;">
-              <button v-on:click="addToPizza(ingredient)">Добавить</button>
-              <button v-on:click="deleteFromPizza(ingredient)">Удалить</button>
-            </p>
+            <div class="ingredient-view">
+              <img class="ingredient-icon" :src="ingredient.icon">
+              <span> {{ingredient.price }} ₽</span>
+            </div>
+            <div class="ingredient-info">
+              <b>{{ ingredient.name }}</b>
+              <span> {{ingredient.portion }} г
+                <span></span>
+              </span>
+              <p style="margin: 0; padding: 0px">
+                <button class="round-button add" v-on:click="addToPizza(ingredient)">+</button>
+                <button class="round-button remove" v-on:click="deleteFromPizza(ingredient)">-</button>
+              </p>
+            </div>
           </div>
         </div>
-        <p>Общая стоимость: {{ orderSum }} руб.</p>
+        <p>Общая стоимость: {{ orderSum }} ₽</p>
       </div>
     </div>
   </div>
@@ -46,19 +55,25 @@ export default {
           id: 1,
           name: 'Бекон',
           price: 50,
-          img: 'static/images/balyk.png'
+          portion: 50,
+          img: 'static/images/constructor/balyk.png',
+          icon: 'static/images/ingredients/balyk.jpg'
         },
         {
           id: 2,
           name: 'Салями',
           price: 40,
-          img: 'static/images/salami.png'
+          portion: 50,
+          img: 'static/images/constructor/salami.png',
+          icon: 'static/images/ingredients/salami.jpg'
         },
         {
           id: 3,
           name: 'Помидоры',
           price: 30,
-          img: 'static/images/tomato.png'
+          portion: 50,
+          img: 'static/images/constructor/tomato.png',
+          icon: 'static/images/ingredients/tomato.png'
         }
       ],
       order: {
@@ -143,7 +158,7 @@ hr {
 
 .constructor {
   position: relative;
-  background: url('../static/images/pizza-base.png');
+  background: url('../static/images/constructor/pizza-base.png');
   width: 100%;
   height: auto;
   background-size: contain;
@@ -157,26 +172,106 @@ hr {
 
 .ingredients-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  grid-template-rows: repeat(10, 70px);
-  grid-gap: 7px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-rows: repeat(10, 120px);
+  grid-gap: 12px 12px;
+  padding-left: 30px;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
 }
 
 .ingredient-item {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
   height: 100%;
-  padding: 12px;
+  padding: 0px;
+  font-size: 20px;
+  font-family: cursive;
   background-color: #c1bcb9ab;
   border-radius: 5px;
+  -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+}
+
+.ingredient-item:hover {
+  transition: transform 700ms;
+  transform: scale(1.03);
+  background-color: #c1bcb9;
+}
+
+.ingredient-view {
+  padding: 15px;
+  font-weight: bold;
+  min-width: 30%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgba(155, 155, 155, 0.65);
+  border-radius: 5px 0 0 5px;
+}
+
+.ingredient-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+  background-color: white;
+  margin: 0px 0px 7px 0px;
+  -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+}
+
+.ingredient-info {
+  padding: 15px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.ingredient-icon> img {
+  padding: 5px;
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+}
+
+.round-button {
+  font-size: 25px;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  padding: 0;
+  margin: 5px 0 0 0;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  outline: none;
+}
+
+.add {
+  background-color: rgba(0, 0, 0, 0);
+  color: #3ca03c;
+  border: 2px solid #3ca03c;
+}
+
+.add:hover {
+  background-color: #3ca03c;
+  color: white;
+}
+
+.remove {
+  background-color: rgba(0, 0, 0, 0);
+  color: #b93e3e;
+  border: 2px solid #b93e3e;
+}
+
+.remove:hover {
+  background-color: #b93e3e;
+  color: white;
 }
 
 .light-yellow{
