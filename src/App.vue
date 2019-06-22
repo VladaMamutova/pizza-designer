@@ -13,27 +13,23 @@
     <div id="container">
       <div class="page-content">
         <div class="constructor">
-          <img v-show="hasIngredientInOrder(ingredient.id)" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
+          <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
         </div>
         <div class="ingredients-grid">
-          <div class="ingredient-item" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
+          <div class="ingredient-item" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updatePizza(index)">
             <div class="ingredient-view">
               <img class="ingredient-icon" :src="ingredient.icon">
-              <span> {{ingredient.price }} ₽</span>
+              <span> {{ ingredient.price }} ₽</span>
             </div>
             <div class="ingredient-info">
               <b>{{ ingredient.name }}</b>
-              <span> {{ingredient.portion }} г
+              <span> {{ ingredient.portion }} г
                 <span></span>
               </span>
-              <p style="margin: 0; padding: 0px">
-                <button class="round-button add" v-on:click="addToPizza(ingredient)">+</button>
-                <button class="round-button remove" v-on:click="deleteFromPizza(ingredient)">-</button>
-              </p>
             </div>
           </div>
         </div>
-        <p>Общая стоимость: {{ orderSum }} ₽</p>
+        <p>Общая стоимость: {{ order.fullPrice }} ₽</p>
       </div>
     </div>
   </div>
@@ -53,9 +49,10 @@ export default {
       pizzaIngredients: [
         {
           id: 1,
-          name: 'Бекон',
+          name: 'Балык',
           price: 50,
           portion: 50,
+          hasInOrder: false,
           img: 'static/images/constructor/balyk.png',
           icon: 'static/images/ingredients/balyk.jpg'
         },
@@ -64,6 +61,7 @@ export default {
           name: 'Салями',
           price: 40,
           portion: 50,
+          hasInOrder: false,
           img: 'static/images/constructor/salami.png',
           icon: 'static/images/ingredients/salami.jpg'
         },
@@ -72,39 +70,58 @@ export default {
           name: 'Помидоры',
           price: 30,
           portion: 50,
+          hasInOrder: false,
           img: 'static/images/constructor/tomato.png',
           icon: 'static/images/ingredients/tomato.png'
         }
       ],
       order: {
-        ingredients: [],
+        ingredients: new Map(),
         fullPrice: 0
       }
     }
   },
   methods: {
-    addToPizza: function (ingredient) {
-      this.order.ingredients.push(ingredient.id)
-      this.order.fullPrice += ingredient.price
-    },
-    deleteFromPizza (ingredient) {
-      let index = this.order.ingredients.indexOf(ingredient.id)
-      if (index !== -1) {
-        this.order.ingredients.splice(index, 1)
-        this.order.fullPrice -= ingredient.price
+    updatePizza: function (ingredientIndex) {
+      let portion = 0
+      /* let ingredient = this.pizzaIngredients[ingredientIndex]
+      if (this.order.ingredients.has(ingredient.id)) {
+        portion = this.order.ingredients.get(ingredient.id)
+        portion++
+        if (portion > 2) {
+          this.order.ingredients.delete(ingredient.id)
+          this.pizzaIngredients[ingredientIndex].hasInOrder = false
+        } else {
+          this.order.ingredients.set(ingredient.id, portion)
+          this.pizzaIngredients[ingredientIndex].hasInOrder = true
+        }
+      } */
+      if (this.order.ingredients.has(ingredientIndex)) {
+        portion = this.order.ingredients.get(ingredientIndex)
       }
+      portion++
+      if (portion > 2) {
+        this.order.ingredients.delete(ingredientIndex)
+        this.pizzaIngredients[ingredientIndex].hasInOrder = false
+      } else {
+        this.order.ingredients.set(ingredientIndex, portion)
+        this.pizzaIngredients[ingredientIndex].hasInOrder = true
+      }
+      this.calcOrderPrice()
+    },
+    calcOrderPrice: function () {
+      let fullPrice = 0
+      for (let ingridient of this.order.ingredients) {
+        fullPrice += this.pizzaIngredients[ingridient[0]].price * ingridient[1]
+      }
+      this.order.fullPrice = fullPrice
     },
     hasIngredientInOrder (ingredientId) {
-      if (this.order.ingredients.indexOf(ingredientId) !== -1) {
+      if (this.order.ingredients.has(ingredientId)) {
         return true
       } else {
         return false
       }
-    }
-  },
-  computed: {
-    orderSum () {
-      return this.order.fullPrice
     }
   }
 }
@@ -226,7 +243,7 @@ hr {
 }
 
 .ingredient-info {
-  padding: 15px;
+  padding-top: 15px;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -246,7 +263,7 @@ hr {
   border-radius: 30px;
   padding: 0;
   margin: 5px 0 0 0;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   cursor: pointer;
   outline: none;
