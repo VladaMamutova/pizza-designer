@@ -17,15 +17,14 @@
         </div>
         <div class="ingredients-grid">
           <div class="ingredient-item" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updatePizza(index)">
-            <div class="ingredient-view">
+            <div class="ingredient-view" v-bind:class="{ selected: ingredient.hasInOrder }">
               <img class="ingredient-icon" :src="ingredient.icon">
               <span> {{ ingredient.price }} ₽</span>
             </div>
-            <div class="ingredient-info">
+            <div class="ingredient-info" v-bind:class="{ activated: ingredient.hasInOrder }">
               <b>{{ ingredient.name }}</b>
-              <span> {{ ingredient.portion }} г
-                <span></span>
-              </span>
+              <span> {{ ingredient.portion }} г</span>
+              <div v-show="ingredient.hasInOrder" class="portion-count">×{{ getPortion(index) }}</div>
             </div>
           </div>
         </div>
@@ -115,6 +114,11 @@ export default {
         fullPrice += this.pizzaIngredients[ingridient[0]].price * ingridient[1]
       }
       this.order.fullPrice = fullPrice
+    },
+    getPortion: function (ingredientIndex) {
+      if (this.order.ingredients.has(ingredientIndex)) {
+        return this.order.ingredients.get(ingredientIndex)
+      }
     },
     hasIngredientInOrder (ingredientId) {
       if (this.order.ingredients.has(ingredientId)) {
@@ -212,6 +216,7 @@ hr {
   -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
   -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
   box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  cursor: pointer;
 }
 
 .ingredient-item:hover {
@@ -231,19 +236,30 @@ hr {
   border-radius: 5px 0 0 5px;
 }
 
+.ingredient-view> span {
+  margin-top: 7px;
+}
+
+.selected {
+  background: #d7bc74;
+}
+
+.activated {
+  background: #ffdd83;
+}
+
 .ingredient-icon {
   width: 60px;
   height: 60px;
   border-radius: 60px;
   background-color: white;
-  margin: 0px 0px 7px 0px;
   -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
   -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
   box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
 }
 
 .ingredient-info {
-  padding-top: 15px;
+  padding: 15px 5px 5px 5px;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -254,6 +270,16 @@ hr {
   width: 60px;
   height: 60px;
   border-radius: 60px;
+}
+
+.portion-count {
+  width: 40px;
+  background: orange;
+  margin: 10px 5px auto auto;
+  border-radius: 5px;
+  -webkit-box-shadow: 3px 3px 4px -3px rgba(50, 50, 50, 0.7);
+  -moz-box-shadow: 3px 3px 4px -3px rgba(50, 50, 50, 0.7);
+  box-shadow: 3px 3px 4px -3px rgba(50, 50, 50, 0.7);
 }
 
 .round-button {
