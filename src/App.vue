@@ -16,15 +16,18 @@
           <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
         </div>
         <div class="ingredients-grid">
-          <div class="ingredient-item" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updatePizza(index)">
+          <div class="ingredient-item" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
             <div class="ingredient-view" v-bind:class="{ selected: ingredient.hasInOrder }">
               <img class="ingredient-icon" :src="ingredient.icon">
               <span> {{ ingredient.price }} ₽</span>
             </div>
-            <div class="ingredient-info" v-bind:class="{ activated: ingredient.hasInOrder }">
+            <div class="ingredient-info" v-bind:class="{ 'selected-info': ingredient.hasInOrder }">
               <b>{{ ingredient.name }}</b>
               <span> {{ ingredient.portion }} г</span>
-              <div v-show="ingredient.hasInOrder" class="portion-count">×{{ getPortion(index) }}</div>
+              <div v-show="ingredient.hasInOrder" class="order-info">
+                <img src="../static/images/remove.png" @click.stop="removeFromOrder(index)">
+                <div class="portion-count">×{{ getPortion(index) }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -81,32 +84,21 @@ export default {
     }
   },
   methods: {
-    updatePizza: function (ingredientIndex) {
-      let portion = 0
-      /* let ingredient = this.pizzaIngredients[ingredientIndex]
-      if (this.order.ingredients.has(ingredient.id)) {
-        portion = this.order.ingredients.get(ingredient.id)
+    updateOrder: function (ingredientIndex) {
+      if (ingredientIndex >= 0 && ingredientIndex < this.pizzaIngredients.length) {
+        let portion = 0
+        if (this.order.ingredients.has(ingredientIndex)) {
+          portion = this.order.ingredients.get(ingredientIndex)
+        }
         portion++
         if (portion > 2) {
-          this.order.ingredients.delete(ingredient.id)
-          this.pizzaIngredients[ingredientIndex].hasInOrder = false
+          this.removeFromOrder(ingredientIndex)
         } else {
-          this.order.ingredients.set(ingredient.id, portion)
+          this.order.ingredients.set(ingredientIndex, portion)
           this.pizzaIngredients[ingredientIndex].hasInOrder = true
+          this.calcOrderPrice()
         }
-      } */
-      if (this.order.ingredients.has(ingredientIndex)) {
-        portion = this.order.ingredients.get(ingredientIndex)
       }
-      portion++
-      if (portion > 2) {
-        this.order.ingredients.delete(ingredientIndex)
-        this.pizzaIngredients[ingredientIndex].hasInOrder = false
-      } else {
-        this.order.ingredients.set(ingredientIndex, portion)
-        this.pizzaIngredients[ingredientIndex].hasInOrder = true
-      }
-      this.calcOrderPrice()
     },
     calcOrderPrice: function () {
       let fullPrice = 0
@@ -114,6 +106,13 @@ export default {
         fullPrice += this.pizzaIngredients[ingridient[0]].price * ingridient[1]
       }
       this.order.fullPrice = fullPrice
+    },
+    removeFromOrder: function (ingredientIndex) {
+      if (this.order.ingredients.has(ingredientIndex)) {
+        this.order.ingredients.delete(ingredientIndex)
+        this.pizzaIngredients[ingredientIndex].hasInOrder = false
+        this.calcOrderPrice()
+      }
     },
     getPortion: function (ingredientIndex) {
       if (this.order.ingredients.has(ingredientIndex)) {
@@ -225,10 +224,12 @@ hr {
   background-color: #c1bcb9;
 }
 
+.ingredient-item:hover .order-info> img { display: flex; }
+
 .ingredient-view {
   padding: 15px;
   font-weight: bold;
-  min-width: 30%;
+  width: 30%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -236,26 +237,32 @@ hr {
   border-radius: 5px 0 0 5px;
 }
 
-.ingredient-view> span {
-  margin-top: 7px;
-}
-
 .selected {
   background: #d7bc74;
 }
 
-.activated {
+.selected-info {
   background: #ffdd83;
 }
 
 .ingredient-icon {
+  object-fit: cover;
   width: 60px;
-  height: 60px;
+  height: auto;
+  min-height: 60px;
   border-radius: 60px;
+  margin-bottom: 8px;
   background-color: white;
   -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
   -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
   box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+}
+
+.ingredient-icon> img {
+  padding: 5px;
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
 }
 
 .ingredient-info {
@@ -265,11 +272,16 @@ hr {
   flex-direction: column;
 }
 
-.ingredient-icon> img {
-  padding: 5px;
-  width: 60px;
-  height: 60px;
-  border-radius: 60px;
+.order-info {
+  display: flex;
+  flex-direction: row;
+}
+
+.order-info> img {
+  display: none;
+  width: 24px;
+  height: 24px;
+  margin: 13px auto auto 5px;
 }
 
 .portion-count {
