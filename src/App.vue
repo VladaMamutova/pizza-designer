@@ -17,7 +17,7 @@
         </div>
         <div class="ingredients-grid">
           <div class="ingredient-item" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
-            <div class="ingredient-view" v-bind:class="{ selected: ingredient.hasInOrder }">
+            <div class="ingredient-view" v-bind:class="{ 'selected-view': ingredient.hasInOrder }">
               <img class="ingredient-icon" :src="ingredient.icon">
               <span> {{ ingredient.price }} ₽</span>
             </div>
@@ -26,14 +26,18 @@
                 <b>{{ ingredient.name }}</b>
                 <span class="portion"> {{ ingredient.portion }} г</span>
               </div>
-              <div v-show="ingredient.hasInOrder" class="order-info">
+              <div v-show="ingredient.hasInOrder" class="summary-info">
                 <img src="../static/images/remove.png" @click.stop="removeFromOrder(index)">
                 <div class="portion-count">×{{ getPortion(index) }}</div>
               </div>
             </div>
           </div>
         </div>
-        <p>Общая стоимость: {{ order.fullPrice }} ₽</p>
+        <div class="order-info">
+          <span>Итого:</span>
+          <span></span>
+          <span class="order-sum">{{ order.fullPrice }} ₽</span>
+        </div>
       </div>
     </div>
   </div>
@@ -308,9 +312,27 @@ hr {
   display: block;
 }
 
+.order-info {
+  margin: auto 0 auto 0;
+  padding-top: 10px;
+  font-size: 25px;
+  background-color: #ffdd83;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 100px auto auto;
+  grid-template-rows: 45px;
+  -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+}
+
+.order-sum {
+  margin: 0 10px 0 auto;
+}
+
 .ingredients-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   grid-template-rows: repeat(10, 120px);
   grid-gap: 12px 12px;
   padding-left: 30px;
@@ -341,7 +363,9 @@ hr {
   background-color: #c1bcb9;
 }
 
-.ingredient-item:hover .order-info> img { display: flex; }
+.ingredient-item:hover .summary-info> img {
+  display: flex;
+}
 
 .ingredient-view {
   padding: 15px;
@@ -354,7 +378,7 @@ hr {
   border-radius: 5px 0 0 5px;
 }
 
-.selected {
+.selected-view {
   background: #d7bc74;
 }
 
@@ -403,7 +427,7 @@ hr {
   font-size: 16px;
 }
 
-.order-info {
+.summary-info {
   display: flex;
   flex-direction: row;
   position: absolute;
@@ -411,7 +435,7 @@ hr {
   width: 100%;
 }
 
-.order-info> img {
+.summary-info> img {
   display: none;
   width: 24px;
   height: 24px;
