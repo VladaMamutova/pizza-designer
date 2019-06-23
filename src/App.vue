@@ -35,7 +35,7 @@
       <div class="order-info">
         <span>Итого:</span>
         <span></span>
-        <span class="order-sum">{{ order.fullPrice }} ₽</span>
+        <span class="order-sum">{{ order.totalWeight }} г / <b>{{ order.fullPrice }} ₽</b></span>
       </div>
     </div>
   </div>
@@ -200,7 +200,8 @@ export default {
       ],
       order: {
         ingredients: new Map(),
-        fullPrice: 0
+        fullPrice: 0,
+        totalWeight: 0
       }
     }
   },
@@ -217,22 +218,25 @@ export default {
         } else {
           this.order.ingredients.set(ingredientIndex, portion)
           this.pizzaIngredients[ingredientIndex].hasInOrder = true
-          this.calcOrderPrice()
+          this.calcOrderInfo()
         }
       }
     },
-    calcOrderPrice: function () {
+    calcOrderInfo: function () {
       let fullPrice = 0
+      let totalWeight = 0
       for (let ingridient of this.order.ingredients) {
         fullPrice += this.pizzaIngredients[ingridient[0]].price * ingridient[1]
+        totalWeight += this.pizzaIngredients[ingridient[0]].portion * ingridient[1]
       }
       this.order.fullPrice = fullPrice
+      this.order.totalWeight = totalWeight
     },
     removeFromOrder: function (ingredientIndex) {
       if (this.order.ingredients.has(ingredientIndex)) {
         this.order.ingredients.delete(ingredientIndex)
         this.pizzaIngredients[ingredientIndex].hasInOrder = false
-        this.calcOrderPrice()
+        this.calcOrderInfo()
       }
     },
     getPortion: function (ingredientIndex) {
