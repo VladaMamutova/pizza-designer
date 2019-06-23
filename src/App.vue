@@ -10,34 +10,32 @@
     <div class="dark-green"></div>
     </div>
     <hr>
-    <div id="container">
-      <div class="page-content">
-        <div class="constructor">
-          <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
-        </div>
-        <div class="ingredients-grid">
-          <div class="ingredient-item" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
-            <div class="ingredient-view" v-bind:class="{ 'selected-view': ingredient.hasInOrder }">
-              <img class="ingredient-icon" :src="ingredient.icon">
-              <span> {{ ingredient.price }} ₽</span>
+    <div class="page-content">
+      <div class="constructor">
+        <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
+      </div>
+      <div class="ingredients-grid">
+        <div class="ingredient-item" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
+          <div class="ingredient-view" v-bind:class="{ 'selected-view': ingredient.hasInOrder }">
+            <img class="ingredient-icon" :src="ingredient.icon">
+            <span> {{ ingredient.price }} ₽</span>
+          </div>
+          <div class="ingredient-info" v-bind:class="{ 'selected-info': ingredient.hasInOrder }">
+            <div class="main-info">
+              <b>{{ ingredient.name }}</b>
+              <span class="portion"> {{ ingredient.portion }} г</span>
             </div>
-            <div class="ingredient-info" v-bind:class="{ 'selected-info': ingredient.hasInOrder }">
-              <div class="main-info">
-                <b>{{ ingredient.name }}</b>
-                <span class="portion"> {{ ingredient.portion }} г</span>
-              </div>
-              <div v-show="ingredient.hasInOrder" class="summary-info">
-                <img src="../static/images/remove.png" @click.stop="removeFromOrder(index)">
-                <div class="portion-count">×{{ getPortion(index) }}</div>
-              </div>
+            <div v-show="ingredient.hasInOrder" class="summary-info">
+              <img src="../static/images/remove.png" @click.stop="removeFromOrder(index)">
+              <div class="portion-count">×{{ getPortion(index) }}</div>
             </div>
           </div>
         </div>
-        <div class="order-info">
-          <span>Итого:</span>
-          <span></span>
-          <span class="order-sum">{{ order.fullPrice }} ₽</span>
-        </div>
+      </div>
+      <div class="order-info">
+        <span>Итого:</span>
+        <span></span>
+        <span class="order-sum">{{ order.fullPrice }} ₽</span>
       </div>
     </div>
   </div>
@@ -287,9 +285,6 @@ hr {
   background: linear-gradient(to left, #c1bcb9 10%, #164200 30%, #164200 70%, #c1bcb9 90%);
 }
 
-#container {
-}
-
 .page-content {
   padding: 30px 70px;
   display: grid;
@@ -463,28 +458,6 @@ hr {
   transition-duration: 0.4s;
   cursor: pointer;
   outline: none;
-}
-
-.add {
-  background-color: rgba(0, 0, 0, 0);
-  color: #3ca03c;
-  border: 2px solid #3ca03c;
-}
-
-.add:hover {
-  background-color: #3ca03c;
-  color: white;
-}
-
-.remove {
-  background-color: rgba(0, 0, 0, 0);
-  color: #b93e3e;
-  border: 2px solid #b93e3e;
-}
-
-.remove:hover {
-  background-color: #b93e3e;
-  color: white;
 }
 
 .light-yellow{
