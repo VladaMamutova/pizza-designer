@@ -22,13 +22,9 @@
         </div>
       </div>
       <div class="ingredients-menu">
-          <ul>
-            <li class="tab" v-bind:class="{ 'active-tab': selectedTab === tab.id }" v-for="(tab) in tabs" :key="tab.id" @click="selectedTab = tab.id">
-              <a>{{ tab.caption }}</a>
-            </li>
-          </ul>
+        <category-tabs></category-tabs>
         <div class="ingredients-grid">
-          <div class="ingredient-item" v-show="ingredient.tabId === selectedTab" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
+          <div class="ingredient-item" v-show="ingredient.tabId === categoryId" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
             <div class="ingredient-view" v-bind:class="{ 'selected-view': ingredient.hasInOrder }">
               <img class="ingredient-icon" :src="ingredient.icon">
               <span> {{ ingredient.price }} ₽</span>
@@ -52,26 +48,21 @@
 
 <script>
 
+import CategoryTabs from './components/CategoryTabs.vue'
+
+// Импортируем шину для отслеживания в ней событий.
+import eventBus from '../src/eventBus.js'
+
 export default {
+  name: 'App',
+  components: {
+    CategoryTabs
+  },
   data () {
     return {
       height: 400,
       width: 400,
-      tabs: [
-        {
-          id: 1,
-          caption: 'Мясо'
-        },
-        {
-          id: 2,
-          caption: 'Овощи'
-        },
-        {
-          id: 3,
-          caption: 'Сыры'
-        }
-      ],
-      selectedTab: 1,
+      categoryId: 1,
       pizzaIngredients: [
         {
           id: 1,
@@ -287,6 +278,11 @@ export default {
         return false
       }
     }
+  },
+  mounted () {
+    eventBus.$on('category-selected', categoryId => {
+      this.categoryId = categoryId
+    })
   }
 }
 
@@ -327,10 +323,10 @@ hr {
 }
 
 .page-content {
-  padding: 30px 70px;
+  padding: 30px 50px;
   display: grid;
   grid-template-columns: 400px auto;
-  grid-gap: 20px;
+  grid-gap: 30px;
 }
 
 .constructor {
@@ -370,59 +366,6 @@ hr {
   background-color: #fcfcfc;
   border-radius: 5px;
   height: fit-content;
-}
-
-.ingredients-menu ul {
-  list-style: none;
-  align-items: center;
-  border-bottom-color: #dbdbdb;
-  border-bottom-style: solid;
-  border-bottom-width: 3px;
-  display: flex;
-  flex-grow: 1;
-  flex-shrink: 0;
-  justify-content: flex-start;
-  padding: 0px;
-}
-
-.tab {
-  display: block;
-  font-size: x-large;
-  cursor: pointer;
-}
-
-.tab a {
-  align-items: center;
-  border-bottom-color: #dbdbdb;
-  border-bottom-style: solid;
-  border-bottom-width: 3px;
-  color: #828282;
-  display: flex;
-  justify-content: center;
-  margin-bottom: -3px;
-  padding: 0.5em 1em;
-  vertical-align: top;
-}
-
-.ingredients-menu a:hover {
-  border-bottom-color: #2c3e50;
-  color: #2c3e50;
-}
-
-.ingredients-menu li.active-tab a {
-  border-bottom-color: #025f02;
-  color: #025f02;
-}
-
-a {
-  color: #025f02;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.active-tab {
-  color: green;
-  font-weight: bold;
 }
 
 .ingredients-grid {
