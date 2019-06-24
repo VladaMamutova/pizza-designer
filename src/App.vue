@@ -11,31 +11,40 @@
     </div>
     <hr>
     <div class="page-content">
-      <div class="constructor">
-        <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
+      <div>
+        <div class="constructor">
+          <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
+        </div>
+        <div class="order-info">
+          <span>Итого:</span>
+          <span></span>
+          <span class="order-sum">{{ order.totalWeight }} г / <b>{{ order.fullPrice }} ₽</b></span>
+        </div>
       </div>
-      <div class="ingredients-grid">
-        <div class="ingredient-item" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
-          <div class="ingredient-view" v-bind:class="{ 'selected-view': ingredient.hasInOrder }">
-            <img class="ingredient-icon" :src="ingredient.icon">
-            <span> {{ ingredient.price }} ₽</span>
-          </div>
-          <div class="ingredient-info" v-bind:class="{ 'selected-info': ingredient.hasInOrder }">
-            <div class="main-info">
-              <b>{{ ingredient.name }}</b>
-              <span class="portion"> {{ ingredient.portion }} г</span>
+      <div class="ingredients-menu">
+          <ul>
+            <li class="tab" v-bind:class="{ 'active-tab': selectedTab === tab.id }" v-for="(tab) in tabs" :key="tab.id" @click="selectedTab = tab.id">
+              <a>{{ tab.caption }}</a>
+            </li>
+          </ul>
+        <div class="ingredients-grid">
+          <div class="ingredient-item" v-show="ingredient.tabId === selectedTab" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
+            <div class="ingredient-view" v-bind:class="{ 'selected-view': ingredient.hasInOrder }">
+              <img class="ingredient-icon" :src="ingredient.icon">
+              <span> {{ ingredient.price }} ₽</span>
             </div>
-            <div v-show="ingredient.hasInOrder" class="summary-info">
-              <img src="../static/images/remove.png" @click.stop="removeFromOrder(index)">
-              <div class="portion-count">×{{ getPortion(index) }}</div>
+            <div class="ingredient-info" v-bind:class="{ 'selected-info': ingredient.hasInOrder }">
+              <div class="main-info">
+                <b>{{ ingredient.name }}</b>
+                <span class="portion"> {{ ingredient.portion }} г</span>
+              </div>
+              <div v-show="ingredient.hasInOrder" class="summary-info">
+                <img src="../static/images/remove.png" @click.stop="removeFromOrder(index)">
+                <div class="portion-count">×{{ getPortion(index) }}</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="order-info">
-        <span>Итого:</span>
-        <span></span>
-        <span class="order-sum">{{ order.totalWeight }} г / <b>{{ order.fullPrice }} ₽</b></span>
       </div>
     </div>
   </div>
@@ -46,15 +55,27 @@
 export default {
   data () {
     return {
-      message: 'Hello Vue.js!',
-      title: 'Craft your own pizza!',
       height: 400,
       width: 400,
-      restaurantIsOpen: true,
-      pizzaSizes: [35, 40],
+      tabs: [
+        {
+          id: 1,
+          caption: 'Мясо'
+        },
+        {
+          id: 2,
+          caption: 'Овощи'
+        },
+        {
+          id: 3,
+          caption: 'Сыры'
+        }
+      ],
+      selectedTab: 1,
       pizzaIngredients: [
         {
           id: 1,
+          tabId: 3,
           name: 'Сыр "Пармезан"',
           price: 99,
           portion: 70,
@@ -64,6 +85,7 @@ export default {
         },
         {
           id: 2,
+          tabId: 1,
           name: 'Ветчина',
           price: 50,
           portion: 50,
@@ -73,6 +95,7 @@ export default {
         },
         {
           id: 3,
+          tabId: 1,
           name: 'Бекон',
           price: 65,
           portion: 50,
@@ -82,6 +105,7 @@ export default {
         },
         {
           id: 4,
+          tabId: 1,
           name: 'Куриное филе копчёное',
           price: 69,
           portion: 50,
@@ -91,6 +115,7 @@ export default {
         },
         {
           id: 5,
+          tabId: 1,
           name: 'Салями',
           price: 79,
           portion: 50,
@@ -100,6 +125,7 @@ export default {
         },
         {
           id: 6,
+          tabId: 1,
           name: 'Колбаски охотничьи',
           price: 79,
           portion: 50,
@@ -109,6 +135,7 @@ export default {
         },
         {
           id: 7,
+          tabId: 2,
           name: 'Помидоры',
           price: 35,
           portion: 50,
@@ -118,6 +145,7 @@ export default {
         },
         {
           id: 8,
+          tabId: 2,
           name: 'Перец болгарский',
           price: 45,
           portion: 50,
@@ -127,6 +155,7 @@ export default {
         },
         {
           id: 9,
+          tabId: 2,
           name: 'Красный лук',
           price: 30,
           portion: 50,
@@ -136,6 +165,7 @@ export default {
         },
         {
           id: 10,
+          tabId: 2,
           name: 'Шампиньоны свежие',
           price: 59,
           portion: 50,
@@ -145,6 +175,7 @@ export default {
         },
         {
           id: 11,
+          tabId: 2,
           name: 'Ананас',
           price: 39,
           portion: 30,
@@ -154,6 +185,7 @@ export default {
         },
         {
           id: 12,
+          tabId: 2,
           name: 'Кукуруза',
           price: 39,
           portion: 30,
@@ -163,6 +195,7 @@ export default {
         },
         {
           id: 13,
+          tabId: 3,
           name: 'Сыр "Добрлю"',
           price: 99,
           portion: 70,
@@ -172,6 +205,7 @@ export default {
         },
         {
           id: 14,
+          tabId: 3,
           name: 'Сыр "Фета"',
           price: 90,
           portion: 70,
@@ -181,6 +215,7 @@ export default {
         },
         {
           id: 15,
+          tabId: 2,
           name: 'Маслины',
           price: 39,
           portion: 30,
@@ -190,6 +225,7 @@ export default {
         },
         {
           id: 16,
+          tabId: 2,
           name: 'Зелень',
           price: 10,
           portion: 5,
@@ -266,6 +302,7 @@ export default {
   height: 100vh;
   background: url('assets/wood-background.jpg');
   object-fit: cover;
+  background-size: cover;
 }
 
 header {
@@ -293,15 +330,14 @@ hr {
   padding: 30px 70px;
   display: grid;
   grid-template-columns: 400px auto;
-  grid-template-rows: 400px;
-  grid-gap: 10px;
+  grid-gap: 20px;
 }
 
 .constructor {
   position: relative;
   background: url('../static/images/constructor/pizza-base.png');
-  width: 100%;
-  height: auto;
+  width: 400px;
+  height: 400px;
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -312,7 +348,7 @@ hr {
 }
 
 .order-info {
-  margin: auto 0 auto 0;
+  margin: 20px 0 auto 0;
   padding-top: 10px;
   font-size: 25px;
   background-color: #ffdd83;
@@ -329,12 +365,70 @@ hr {
   margin: 0 10px 0 auto;
 }
 
+.ingredients-menu {
+  padding: 0 20px 30px 20px;
+  background-color: #fcfcfc;
+  border-radius: 5px;
+  height: fit-content;
+}
+
+.ingredients-menu ul {
+  list-style: none;
+  align-items: center;
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 0;
+  justify-content: flex-start;
+  padding: 0px;
+}
+
+.tab {
+  display: block;
+  font-size: x-large;
+  cursor: pointer;
+}
+
+.tab a {
+  align-items: center;
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  color: #828282;
+  display: flex;
+  justify-content: center;
+  margin-bottom: -3px;
+  padding: 0.5em 1em;
+  vertical-align: top;
+}
+
+.ingredients-menu a:hover {
+  border-bottom-color: #2c3e50;
+  color: #2c3e50;
+}
+
+.ingredients-menu li.active-tab a {
+  border-bottom-color: #025f02;
+  color: #025f02;
+}
+
+a {
+  color: #025f02;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.active-tab {
+  color: green;
+  font-weight: bold;
+}
+
 .ingredients-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  grid-template-rows: repeat(10, 120px);
   grid-gap: 12px 12px;
-  padding-left: 30px;
   -ms-user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -373,7 +467,7 @@ hr {
   display: flex;
   align-items: center;
   flex-direction: column;
-  background-color: rgba(155, 155, 155, 0.65);
+  background-color: #9b9b9ba6;
   border-radius: 5px 0 0 5px;
 }
 
