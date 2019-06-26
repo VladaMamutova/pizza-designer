@@ -24,22 +24,14 @@
       <div class="ingredients-menu">
         <category-tabs></category-tabs>
         <div class="ingredients-grid">
-          <div class="ingredient-item" v-show="ingredient.tabId === categoryId" v-for="(ingredient, index) in pizzaIngredients" :key="ingredient.id" @click="updateOrder(index)">
-            <div class="ingredient-view" v-bind:class="{ 'selected-view': ingredient.hasInOrder }">
-              <img class="ingredient-icon" :src="ingredient.icon">
-              <span> {{ ingredient.price }} ₽</span>
-            </div>
-            <div class="ingredient-info" v-bind:class="{ 'selected-info': ingredient.hasInOrder }">
-              <div class="main-info">
-                <b>{{ ingredient.name }}</b>
-                <span class="portion"> {{ ingredient.portion }} г</span>
-              </div>
-              <div v-show="ingredient.hasInOrder" class="summary-info">
-                <img src="../static/images/remove.png" @click.stop="removeFromOrder(index)">
-                <div class="portion-count">×{{ getPortion(index) }}</div>
-              </div>
-            </div>
-          </div>
+          <ingredient-card
+            v-show="ingredient.tabId === categoryId"
+            v-for="(ingredient, index) in pizzaIngredients"
+            :ingredient="ingredient"
+            :index="index"
+            :portionCount="getPortionCount(index)"
+            :key="ingredient.id">
+          </ingredient-card>
         </div>
       </div>
     </div>
@@ -49,6 +41,7 @@
 <script>
 
 import CategoryTabs from './components/CategoryTabs.vue'
+import IngredientCard from './components/IngredientCard.vue'
 
 // Импортируем шину для отслеживания в ней событий.
 import eventBus from '../src/eventBus.js'
@@ -56,7 +49,8 @@ import eventBus from '../src/eventBus.js'
 export default {
   name: 'App',
   components: {
-    CategoryTabs
+    CategoryTabs,
+    IngredientCard
   },
   data () {
     return {
@@ -266,9 +260,11 @@ export default {
         this.calcOrderInfo()
       }
     },
-    getPortion: function (ingredientIndex) {
+    getPortionCount: function (ingredientIndex) {
       if (this.order.ingredients.has(ingredientIndex)) {
         return this.order.ingredients.get(ingredientIndex)
+      } else {
+        return 0
       }
     },
     hasIngredientInOrder (ingredientId) {
@@ -282,6 +278,12 @@ export default {
   mounted () {
     eventBus.$on('category-selected', categoryId => {
       this.categoryId = categoryId
+    })
+    eventBus.$on('ingredient-updated', ingredientIndex => {
+      this.updateOrder(ingredientIndex)
+    })
+    eventBus.$on('ingredient-removed', ingredientIndex => {
+      this.removeFromOrder(ingredientIndex)
     })
   }
 }
@@ -376,116 +378,6 @@ hr {
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
-}
-
-.ingredient-item {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  height: 100%;
-  padding: 0px;
-  font-size: 20px;
-  background-color: #c1bcb9ab;
-  border-radius: 5px;
-  -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
-  -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
-  box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
-  cursor: pointer;
-}
-
-.ingredient-item:hover {
-  transition: transform 700ms;
-  transform: scale(1.03);
-  background-color: #c1bcb9;
-}
-
-.ingredient-item:hover .summary-info> img {
-  display: flex;
-}
-
-.ingredient-view {
-  padding: 15px;
-  font-weight: bold;
-  width: 30%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  background-color: #9b9b9ba6;
-  border-radius: 5px 0 0 5px;
-}
-
-.selected-view {
-  background: #d7bc74;
-}
-
-.selected-info {
-  background: #ffdd83;
-}
-
-.ingredient-icon {
-  object-fit: cover;
-  width: 60px;
-  height: auto;
-  min-height: 60px;
-  border-radius: 60px;
-  margin-bottom: 8px;
-  background-color: white;
-  -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
-  -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
-  box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
-}
-
-.ingredient-icon> img {
-  padding: 5px;
-  width: 60px;
-  height: 60px;
-  border-radius: 60px;
-}
-
-.ingredient-info {
-  padding: 5px 5px 25px 5px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  line-height: 25px;
-  position: relative;
-  border-radius: 0 5px 5px 0;
-}
-
-.main-info {
-  display: flex;
-  margin: auto;
-  flex-direction: column;
-}
-
-.portion {
-  line-height: 30px;
-  font-size: 16px;
-}
-
-.summary-info {
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
-}
-
-.summary-info> img {
-  display: none;
-  width: 24px;
-  height: 24px;
-  margin: auto auto auto 5px;
-}
-
-.portion-count {
-  width: 40px;
-  background: orange;
-  margin: auto 15px auto auto;
-  border-radius: 5px;
-  -webkit-box-shadow: 3px 3px 4px -3px rgba(50, 50, 50, 0.7);
-  -moz-box-shadow: 3px 3px 4px -3px rgba(50, 50, 50, 0.7);
-  box-shadow: 3px 3px 4px -3px rgba(50, 50, 50, 0.7);
 }
 
 .round-button {
