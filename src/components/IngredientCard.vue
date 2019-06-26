@@ -32,22 +32,14 @@ export default {
     portionCount: {
       type: Number,
       required: true
-    },
-    index: {
-      type: Number,
-      required: true
-    }
-  },
-  data () {
-    return {
     }
   },
   methods: {
     removeIngredient: function () {
-      eventBus.$emit('ingredient-removed', this.index)
+      eventBus.$emit('ingredient-removed', this.ingredient.id)
     },
     updatePortionCount: function () {
-      eventBus.$emit('ingredient-updated', this.index)
+      eventBus.$emit('ingredient-updated', this.ingredient.id)
     }
   }
 }

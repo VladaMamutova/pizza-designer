@@ -26,10 +26,9 @@
         <div class="ingredients-grid">
           <ingredient-card
             v-show="ingredient.tabId === categoryId"
-            v-for="(ingredient, index) in pizzaIngredients"
+            v-for="ingredient in pizzaIngredients"
             :ingredient="ingredient"
-            :index="index"
-            :portionCount="getPortionCount(index)"
+            :portionCount="getPortionCount(ingredient.id)"
             :key="ingredient.id">
           </ingredient-card>
         </div>
@@ -227,17 +226,18 @@ export default {
     }
   },
   methods: {
-    updateOrder: function (ingredientIndex) {
-      if (ingredientIndex >= 0 && ingredientIndex < this.pizzaIngredients.length) {
+    updateOrder: function (ingredientId) {
+      let ingredientIndex = this.pizzaIngredients.findIndex(ingredient => ingredient.id === ingredientId)
+      if (ingredientIndex !== -1) {
         let portion = 0
-        if (this.order.ingredients.has(ingredientIndex)) {
-          portion = this.order.ingredients.get(ingredientIndex)
+        if (this.order.ingredients.has(ingredientId)) {
+          portion = this.order.ingredients.get(ingredientId)
         }
         portion++
         if (portion > 2) {
-          this.removeFromOrder(ingredientIndex)
+          this.removeFromOrder(ingredientId)
         } else {
-          this.order.ingredients.set(ingredientIndex, portion)
+          this.order.ingredients.set(ingredientId, portion)
           this.pizzaIngredients[ingredientIndex].hasInOrder = true
           this.calcOrderInfo()
         }
@@ -253,16 +253,17 @@ export default {
       this.order.fullPrice = fullPrice
       this.order.totalWeight = totalWeight
     },
-    removeFromOrder: function (ingredientIndex) {
-      if (this.order.ingredients.has(ingredientIndex)) {
-        this.order.ingredients.delete(ingredientIndex)
+    removeFromOrder: function (ingredientId) {
+      let ingredientIndex = this.pizzaIngredients.findIndex(ingredient => ingredient.id === ingredientId)
+      if (ingredientIndex !== -1 && this.order.ingredients.has(ingredientId)) {
+        this.order.ingredients.delete(ingredientId)
         this.pizzaIngredients[ingredientIndex].hasInOrder = false
         this.calcOrderInfo()
       }
     },
-    getPortionCount: function (ingredientIndex) {
-      if (this.order.ingredients.has(ingredientIndex)) {
-        return this.order.ingredients.get(ingredientIndex)
+    getPortionCount: function (ingredientId) {
+      if (this.order.ingredients.has(ingredientId)) {
+        return this.order.ingredients.get(ingredientId)
       } else {
         return 0
       }
@@ -279,8 +280,8 @@ export default {
     eventBus.$on('category-selected', categoryId => {
       this.categoryId = categoryId
     })
-    eventBus.$on('ingredient-updated', ingredientIndex => {
-      this.updateOrder(ingredientIndex)
+    eventBus.$on('ingredient-updated', ingredientId => {
+      this.updateOrder(ingredientId)
     })
     eventBus.$on('ingredient-removed', ingredientIndex => {
       this.removeFromOrder(ingredientIndex)
