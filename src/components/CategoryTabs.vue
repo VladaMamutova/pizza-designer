@@ -56,6 +56,10 @@ ul {
   flex-shrink: 0;
   justify-content: flex-start;
   padding: 0px;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
 }
 
 .tab {

@@ -55,19 +55,22 @@ export default {
   display: flex;
   height: 100%;
   padding: 0px;
-  font-size: 20px;
+  font-size: large;
   background-color: #c1bcb9ab;
   border-radius: 5px;
-  -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
-  -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
-  box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  -webkit-box-shadow: 4px 4px 6px -3px rgba(50, 50, 50, 0.7);
+  -moz-box-shadow: 4px 4px 6px -3px rgba(50, 50, 50, 0.7);
+  box-shadow: 4px 4px 6px -3px rgba(50, 50, 50, 0.7);
   cursor: pointer;
 }
 
 .ingredient-item:hover {
   transition: transform 700ms;
-  transform: scale(1.03);
+  transform: scale(1.02);
   background-color: #c1bcb9;
+  -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
 }
 
 .ingredient-item:hover .summary-info> img {
@@ -131,7 +134,7 @@ export default {
 
 .portion {
   line-height: 30px;
-  font-size: 16px;
+  font-size: medium;
 }
 
 .summary-info {

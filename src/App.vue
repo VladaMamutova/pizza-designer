@@ -1,25 +1,37 @@
 <template>
   <div id="app">
-  <div class="header">
-    <div class="dark-green"></div>
-    <div class="light-yellow"></div>
-    <div class="dark-red"></div>
-    <header>Pizza Designer</header>
-    <div class="dark-red"></div>
-    <div class="light-yellow"></div>
-    <div class="dark-green"></div>
+    <div class="header">
+      <div class="dark-green"></div>
+      <div class="light-yellow"></div>
+      <div class="dark-red"></div>
+      <header>Конструктор пиццы "Создай сам"</header>
+      <div class="dark-red"></div>
+      <div class="light-yellow"></div>
+      <div class="dark-green"></div>
     </div>
-    <hr>
     <div class="page-content">
-      <div>
         <div class="constructor">
-          <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id" :height="height" :width="width">
+          <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id">
         </div>
-        <div class="order-info">
-          <span>Итого:</span>
-          <span></span>
-          <span class="order-sum">{{ order.totalWeight }} г / <b>{{ order.fullPrice }} ₽</b></span>
+        <button>Заказать</button>
+      <div class="order">
+      <div class="pizza-base-info">
+      <span>Ваша пицца содержит:</span>
+      <div class="order-item">
+        <span>Основа с томатным соусом</span>
+        <span>300 г</span>
+        <span>150 ₽</span>
+      </div>
+       <div class="order-item" v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
+        <span>{{ ingredient.name }} ×{{ getPortionCount(ingredient.id) }}</span>
+        <span>{{ ingredient.portion * getPortionCount(ingredient.id)}} г</span>
+        <span>{{ ingredient.price * getPortionCount(ingredient.id)}} ₽</span>
+      </div>
+      <span>Общий вес: {{ order.totalWeight }} г</span>
+       <div class="order-info">
+          <span class="order-sum"><b>Итого: {{ order.fullPrice }} ₽</b></span>
         </div>
+      </div>
       </div>
       <div class="ingredients-menu">
         <category-tabs></category-tabs>
@@ -53,8 +65,6 @@ export default {
   },
   data () {
     return {
-      height: 400,
-      width: 400,
       categoryId: 1,
       pizzaIngredients: [
         {
@@ -298,10 +308,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
   background: url('assets/wood-background.jpg');
   object-fit: cover;
   background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
 }
 
 header {
@@ -316,64 +330,148 @@ header {
   display: grid;
   grid-template-columns: 40px 40px 40px auto 40px 40px 40px;
   grid-template-rows: 60px;
-}
-
-hr {
-  border: 0;
-  margin: 0;
-  height: 2px;
-  background: linear-gradient(to left, #c1bcb9 10%, #164200 30%, #164200 70%, #c1bcb9 90%);
+  width: 100%;
+  position: fixed;
+  height: 60px;
+  z-index: 1000;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .page-content {
-  padding: 30px 50px;
+  padding: 100px 40px 0 40px;
   display: grid;
-  grid-template-columns: 400px auto;
-  grid-gap: 30px;
+  grid-template-columns: minmax(200px, 370px) minmax(200px, 300px) auto;
+  /*grid-template-columns: auto auto auto;*/
+  grid-template-rows: 400px auto;
+  grid-gap: 15px;
+  grid-template-areas:
+        "c o m"
+        "s o m"
+}
+
+@media screen and (max-width: 1024px) {
+  .page-content {
+    padding: 100px 30px 0 30px;
+    grid-template-rows: 350px auto-fill auto;
+    grid-template-areas:
+      "c m m"
+      "o m m"
+      "s m m"
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .page-content {
+    padding: 100px 0px 0 20px;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "m m m"
+      "o o o"
+      "s s s"
+  }
 }
 
 .constructor {
+  grid-area: c;
   position: relative;
   background: url('../static/images/constructor/pizza-base.png');
-  width: 400px;
-  height: 400px;
   background-size: contain;
   background-repeat: no-repeat;
+  max-width: 400px;
 }
 
 .constructor> img {
   position: absolute;
   display: block;
+  width: 100%;
+  height: auto;
+  background-repeat: no-repeat;
 }
 
-.order-info {
-  margin: 20px 0 auto 0;
-  padding-top: 10px;
-  font-size: 25px;
-  background-color: #ffdd83;
+.pizza-base-info {
+  padding: 15px;
+  font-size: medium;
+  text-align: left;
+  background-color: #ffffff;
+  width: 100% - 30px;
+  height: auto;
+  background-color: #fcfcfc;
   border-radius: 5px;
+  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.order-item {
   display: grid;
-  grid-template-columns: 100px auto auto;
-  grid-template-rows: 45px;
+  font-size: small;
+  margin-top: 8px;
+  grid-template-columns: auto 40px 40px;
+  grid-gap: 5px;
+}
+
+.order {
+  grid-area: o;
+}
+
+button {
+  font-size: 25px;
+  grid-area: s;
+  height: 50px;
+  margin-top: 15px;
+  border-radius: 5px;
+  background-color: #c92828;
+  color: white;
+  outline: none;
+  border: none;
   -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
   -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
   box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.7);
+  cursor: pointer;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+}
+
+button:hover {
+  background-color: #de2d2d;
+  -webkit-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.8);
+  -moz-box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.8);
+  box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.8);
+}
+
+.order-info {
+  grid-area: s;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: x-large;
+  background-color: #ffdd83;
+  border-radius: 5px;
+  text-align: center;
 }
 
 .order-sum {
-  margin: 0 10px 0 auto;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .ingredients-menu {
+  grid-area: m;
   padding: 0 20px 30px 20px;
   background-color: #fcfcfc;
   border-radius: 5px;
   height: fit-content;
+  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .ingredients-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   grid-gap: 12px 12px;
   -ms-user-select: none;
   -moz-user-select: none;
