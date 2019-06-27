@@ -278,13 +278,6 @@ export default {
       } else {
         return 0
       }
-    },
-    hasIngredientInOrder (ingredientId) {
-      if (this.order.ingredients.has(ingredientId)) {
-        return true
-      } else {
-        return false
-      }
     }
   },
   mounted () {
@@ -468,19 +461,6 @@ button:hover {
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
-}
-
-.round-button {
-  font-size: 25px;
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
-  padding: 0;
-  margin: 5px 0 0 0;
-  -webkit-transition-duration: 0.4s;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  outline: none;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1199px) {
