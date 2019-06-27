@@ -228,8 +228,8 @@ export default {
       ],
       order: {
         ingredients: new Map(),
-        fullPrice: 150,
-        totalWeight: 300
+        fullPrice: 0,
+        totalWeight: 0
       }
     }
   },
@@ -281,6 +281,7 @@ export default {
     }
   },
   mounted () {
+    this.calcOrderInfo()
     eventBus.$on('category-selected', categoryId => {
       this.categoryId = categoryId
     })
