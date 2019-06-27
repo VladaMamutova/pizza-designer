@@ -1,37 +1,31 @@
 <template>
   <div id="app">
     <div class="header">
-      <div class="dark-green"></div>
-      <div class="light-yellow"></div>
-      <div class="dark-red"></div>
+      <div class="flag"></div>
       <header>Конструктор пиццы "Создай сам"</header>
-      <div class="dark-red"></div>
-      <div class="light-yellow"></div>
-      <div class="dark-green"></div>
+      <div class="flag-reversed"></div>
     </div>
     <div class="page-content">
         <div class="constructor">
           <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id">
         </div>
-        <button>Заказать</button>
       <div class="order">
-      <div class="pizza-base-info">
-      <span>Ваша пицца содержит:</span>
-      <div class="order-item">
-        <span>Основа с томатным соусом</span>
-        <span>300 г</span>
-        <span>150 ₽</span>
-      </div>
-       <div class="order-item" v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
-        <span>{{ ingredient.name }} ×{{ getPortionCount(ingredient.id) }}</span>
-        <span>{{ ingredient.portion * getPortionCount(ingredient.id)}} г</span>
-        <span>{{ ingredient.price * getPortionCount(ingredient.id)}} ₽</span>
-      </div>
-      <span>Общий вес: {{ order.totalWeight }} г</span>
-       <div class="order-info">
-          <span class="order-sum"><b>Итого: {{ order.fullPrice }} ₽</b></span>
+        <div class="order-info">
+          <span>Ваша пицца содержит:</span>
+          <div class="order-item">
+            <span>Основа с томатным соусом</span>
+            <span>{{ pizzaBase.weight }} г</span>
+            <span>{{ pizzaBase.price }} ₽</span>
+          </div>
+           <div class="order-item" v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
+            <span>{{ ingredient.name }} ×{{ getPortionCount(ingredient.id) }}</span>
+            <span>{{ ingredient.portion * getPortionCount(ingredient.id)}} г</span>
+            <span>{{ ingredient.price * getPortionCount(ingredient.id)}} ₽</span>
+          </div>
+          <div class="order-weight">Общий вес: {{ order.totalWeight }} г</div>
+          <div class="order-sum"><b>Итого: {{ order.fullPrice }} ₽</b></div>
         </div>
-      </div>
+        <button onclick="alert('Ваш заказ отправлен!'); window.location.reload();">Заказать</button>
       </div>
       <div class="ingredients-menu">
         <category-tabs></category-tabs>
@@ -66,6 +60,10 @@ export default {
   data () {
     return {
       categoryId: 1,
+      pizzaBase: {
+        weight: 300,
+        price: 150
+      },
       pizzaIngredients: [
         {
           id: 1,
@@ -230,8 +228,8 @@ export default {
       ],
       order: {
         ingredients: new Map(),
-        fullPrice: 0,
-        totalWeight: 0
+        fullPrice: 150,
+        totalWeight: 300
       }
     }
   },
@@ -257,11 +255,14 @@ export default {
       let fullPrice = 0
       let totalWeight = 0
       for (let ingridient of this.order.ingredients) {
-        fullPrice += this.pizzaIngredients[ingridient[0]].price * ingridient[1]
-        totalWeight += this.pizzaIngredients[ingridient[0]].portion * ingridient[1]
+        let ingredientIndex = this.pizzaIngredients.findIndex(ingredient => ingredient.id === ingridient[0])
+        if (ingredientIndex !== -1) {
+          fullPrice += this.pizzaIngredients[ingredientIndex].price * ingridient[1]
+          totalWeight += this.pizzaIngredients[ingredientIndex].portion * ingridient[1]
+        }
       }
-      this.order.fullPrice = fullPrice
-      this.order.totalWeight = totalWeight
+      this.order.fullPrice = fullPrice + this.pizzaBase.price
+      this.order.totalWeight = totalWeight + this.pizzaBase.weight
     },
     removeFromOrder: function (ingredientId) {
       let ingredientIndex = this.pizzaIngredients.findIndex(ingredient => ingredient.id === ingredientId)
@@ -319,16 +320,16 @@ export default {
 }
 
 header {
-  font-size: 30px;
+  font-size: xx-large;
   font-weight: bold;
   padding: 8px;
   color: white;
-  background: linear-gradient(to left, green, #286f03, green);
+  background-color: #286f03;
 }
 
 .header {
   display: grid;
-  grid-template-columns: 40px 40px 40px auto 40px 40px 40px;
+  grid-template-columns: 120px auto 120px;
   grid-template-rows: 60px;
   width: 100%;
   position: fixed;
@@ -339,38 +340,23 @@ header {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+.flag {
+  background: linear-gradient(to right, #025f02 33%, #ffffb1 33%, #ffffb1 66%, #d20000 66%);
+}
+
+.flag-reversed {
+  background: linear-gradient(to left, #025f02 33%, #ffffb1 33%, #ffffb1 66%, #d20000 66%);
+}
+
 .page-content {
-  padding: 100px 40px 0 40px;
+  padding: 100px 40px 40px 40px;
   display: grid;
   grid-template-columns: minmax(200px, 370px) minmax(200px, 300px) auto;
-  /*grid-template-columns: auto auto auto;*/
-  grid-template-rows: 400px auto;
+  grid-template-rows: 370px auto;
   grid-gap: 15px;
   grid-template-areas:
         "c o m"
-        "s o m"
-}
-
-@media screen and (max-width: 1024px) {
-  .page-content {
-    padding: 100px 30px 0 30px;
-    grid-template-rows: 350px auto-fill auto;
-    grid-template-areas:
-      "c m m"
-      "o m m"
-      "s m m"
-  }
-}
-
-@media screen and (max-width: 720px) {
-  .page-content {
-    padding: 100px 0px 0 20px;
-    grid-template-rows: auto auto auto;
-    grid-template-areas:
-      "m m m"
-      "o o o"
-      "s s s"
-  }
+        ". o m"
 }
 
 .constructor {
@@ -379,7 +365,6 @@ header {
   background: url('../static/images/constructor/pizza-base.png');
   background-size: contain;
   background-repeat: no-repeat;
-  max-width: 400px;
 }
 
 .constructor> img {
@@ -390,7 +375,11 @@ header {
   background-repeat: no-repeat;
 }
 
-.pizza-base-info {
+.order {
+  grid-area: o;
+}
+
+.order-info {
   padding: 15px;
   font-size: medium;
   text-align: left;
@@ -404,21 +393,25 @@ header {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
+.order-info> span {
+  margin-top: 100px;
+}
+
 .order-item {
   display: grid;
   font-size: small;
   margin-top: 8px;
   grid-template-columns: auto 40px 40px;
   grid-gap: 5px;
-}
-
-.order {
-  grid-area: o;
+  border-bottom: dotted;
+  border-bottom-width: 1px;
+  border-color: rgb(170, 170, 170);
+  margin-top: 7px;
 }
 
 button {
   font-size: 25px;
-  grid-area: s;
+  width: 100%;
   height: 50px;
   margin-top: 15px;
   border-radius: 5px;
@@ -443,18 +436,16 @@ button:hover {
   box-shadow: 6px 6px 8px -3px rgba(50, 50, 50, 0.8);
 }
 
-.order-info {
-  grid-area: s;
-  margin-top: 10px;
-  padding: 10px;
-  font-size: x-large;
-  background-color: #ffdd83;
-  border-radius: 5px;
-  text-align: center;
+.order-weight {
+  margin-top: 7px;
 }
 
 .order-sum {
-  margin: 0 auto;
+  margin: 10px auto 0 auto;
+  padding: 10px;
+  font-size: large;
+  background-color: #ffdd83;
+  border-radius: 5px;
   text-align: center;
 }
 
@@ -492,16 +483,42 @@ button:hover {
   outline: none;
 }
 
-.light-yellow{
-  background-color:#ffffb1;
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .page-content {
+    padding: 100px 30px 30px 30px;
+    grid-template-rows: 350px auto-fit;
+    grid-template-areas:
+      "c m m"
+      "o m m"
+  }
 }
 
-.dark-red{
-  background-color:#d20000;
+@media screen and (max-width: 991px) {
+  header {
+    padding-top: 12px;
+    font-size: x-large;
+  }
 }
 
-.dark-green{
-  background-color:#025f02;
+@media screen and (max-width: 767px) {
+  .header {
+    grid-template-columns: 0px auto 0px;
+  }
+  .page-content {
+    padding: 80px 10px 10 10px;
+    grid-gap: 15px 0px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "m"
+      "o"
+  }
+}
+
+@media screen and (max-width: 480px) {
+  header {
+    font-size: large;
+  }
 }
 
 </style>
