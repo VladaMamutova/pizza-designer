@@ -6,9 +6,7 @@
       <div class="flag-reversed"></div>
     </div>
     <div class="page-content">
-        <div class="constructor" :style="{ 'background-image': 'url(' + assets.constructorBackground + ')' }">
-          <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id">
-        </div>
+      <constructor :pizzaIngredients="pizzaIngredients"></constructor>
       <div class="order">
         <div class="order-info">
           <span>Ваша пицца содержит:</span>
@@ -45,6 +43,7 @@
 
 <script>
 
+import Constructor from './components/Constructor.vue'
 import CategoryTabs from './components/CategoryTabs.vue'
 import IngredientCard from './components/IngredientCard.vue'
 
@@ -55,13 +54,13 @@ export default {
   name: 'App',
   components: {
     CategoryTabs,
-    IngredientCard
+    IngredientCard,
+    Constructor
   },
   data () {
     return {
       assets: {
-        appBackground: require('./assets/wood-background.jpg'),
-        constructorBackground: require('./assets/pizza-base.png')
+        appBackground: require('./assets/wood-background.jpg')
       },
       categoryId: 1,
       pizzaBase: {
@@ -354,21 +353,6 @@ header {
   grid-template-areas:
         "c o m"
         ". o m"
-}
-
-.constructor {
-  grid-area: c;
-  position: relative;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
-.constructor> img {
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: auto;
-  background-repeat: no-repeat;
 }
 
 .order {
