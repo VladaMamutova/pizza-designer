@@ -10,7 +10,7 @@
         <span class="portion"> {{ ingredient.portion }} г</span>
       </div>
       <div v-show="ingredient.hasInOrder" class="summary-info">
-        <img src="../../static/images/remove.png" @click.stop="removeIngredient()">
+        <img src="../assets/remove.png" @click.stop="removeIngredient()">
         <div class="portion-count">×{{ portionCount }}</div>
       </div>
     </div>
