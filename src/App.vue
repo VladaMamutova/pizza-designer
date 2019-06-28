@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" :style="{ 'background-image': 'url(' + assets.appBackground + ')' }">
     <div class="header">
       <div class="flag"></div>
       <header>Конструктор пиццы "Создай сам"</header>
       <div class="flag-reversed"></div>
     </div>
     <div class="page-content">
-        <div class="constructor">
+        <div class="constructor" :style="{ 'background-image': 'url(' + assets.constructorBackground + ')' }">
           <img v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :src="ingredient.img" :key="ingredient.id">
         </div>
       <div class="order">
@@ -59,6 +59,10 @@ export default {
   },
   data () {
     return {
+      assets: {
+        appBackground: 'static/images/wood-background.jpg',
+        constructorBackground: 'static/images/constructor/pizza-base.png'
+      },
       categoryId: 1,
       pizzaBase: {
         weight: 300,
@@ -305,7 +309,6 @@ export default {
   color: #2c3e50;
   height: 100%;
   min-height: 100vh;
-  background: url('assets/wood-background.jpg');
   object-fit: cover;
   background-size: cover;
   -webkit-background-size: cover;
@@ -356,7 +359,6 @@ header {
 .constructor {
   grid-area: c;
   position: relative;
-  background: url('../static/images/constructor/pizza-base.png');
   background-size: contain;
   background-repeat: no-repeat;
 }
