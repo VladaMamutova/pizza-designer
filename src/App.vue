@@ -60,8 +60,8 @@ export default {
   data () {
     return {
       assets: {
-        appBackground: 'static/images/wood-background.jpg',
-        constructorBackground: 'static/images/constructor/pizza-base.png'
+        appBackground: '../../static/images/wood-background.jpg',
+        constructorBackground: '../../static/images/constructor/pizza-base.png'
       },
       categoryId: 1,
       pizzaBase: {
@@ -76,8 +76,8 @@ export default {
           price: 99,
           portion: 70,
           hasInOrder: false,
-          img: 'static/images/constructor/parmesan.png',
-          icon: 'static/images/icons/parmesan.jpg'
+          img: '../../static/images/constructor/parmesan.png',
+          icon: '../../static/images/icons/parmesan.jpg'
         },
         {
           id: 2,
@@ -86,8 +86,8 @@ export default {
           price: 50,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/ham.png',
-          icon: 'static/images/icons/ham.jpg'
+          img: '../../static/images/constructor/ham.png',
+          icon: '../../static/images/icons/ham.jpg'
         },
         {
           id: 3,
@@ -96,8 +96,8 @@ export default {
           price: 65,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/bacon.png',
-          icon: 'static/images/icons/bacon.jpg'
+          img: '../../static/images/constructor/bacon.png',
+          icon: '../../static/images/icons/bacon.jpg'
         },
         {
           id: 4,
@@ -106,8 +106,8 @@ export default {
           price: 69,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/chicken-fillet.png',
-          icon: 'static/images/icons/chicken-fillet.jpg'
+          img: '../../static/images/constructor/chicken-fillet.png',
+          icon: '../../static/images/icons/chicken-fillet.jpg'
         },
         {
           id: 5,
@@ -116,8 +116,8 @@ export default {
           price: 79,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/salami.png',
-          icon: 'static/images/icons/salami.jpg'
+          img: '../../static/images/constructor/salami.png',
+          icon: '../../static/images/icons/salami.jpg'
         },
         {
           id: 6,
@@ -126,8 +126,8 @@ export default {
           price: 79,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/hunting-sausages.png',
-          icon: 'static/images/icons/hunting-sausages.jpg'
+          img: '../../static/images/constructor/hunting-sausages.png',
+          icon: '../../static/images/icons/hunting-sausages.jpg'
         },
         {
           id: 7,
@@ -136,8 +136,8 @@ export default {
           price: 35,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/tomato.png',
-          icon: 'static/images/icons/tomato.jpg'
+          img: '../../static/images/constructor/tomato.png',
+          icon: '../../static/images/icons/tomato.jpg'
         },
         {
           id: 8,
@@ -146,8 +146,8 @@ export default {
           price: 45,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/bell-pepper.png',
-          icon: 'static/images/icons/bell-pepper.jpg'
+          img: '../../static/images/constructor/bell-pepper.png',
+          icon: '../../static/images/icons/bell-pepper.jpg'
         },
         {
           id: 9,
@@ -156,8 +156,8 @@ export default {
           price: 30,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/red-onion.png',
-          icon: 'static/images/icons/red-onion.jpg'
+          img: '../../static/images/constructor/red-onion.png',
+          icon: '../../static/images/icons/red-onion.jpg'
         },
         {
           id: 10,
@@ -166,8 +166,8 @@ export default {
           price: 59,
           portion: 50,
           hasInOrder: false,
-          img: 'static/images/constructor/champignon.png',
-          icon: 'static/images/icons/champignon.jpg'
+          img: '../../static/images/constructor/champignon.png',
+          icon: '../../static/images/icons/champignon.jpg'
         },
         {
           id: 11,
@@ -176,8 +176,8 @@ export default {
           price: 39,
           portion: 30,
           hasInOrder: false,
-          img: 'static/images/constructor/pineapple.png',
-          icon: 'static/images/icons/pineapple.jpg'
+          img: '../../static/images/constructor/pineapple.png',
+          icon: '../../static/images/icons/pineapple.jpg'
         },
         {
           id: 12,
@@ -186,8 +186,8 @@ export default {
           price: 39,
           portion: 30,
           hasInOrder: false,
-          img: 'static/images/constructor/corn.png',
-          icon: 'static/images/icons/corn.jpg'
+          img: '../../static/images/constructor/corn.png',
+          icon: '../../static/images/icons/corn.jpg'
         },
         {
           id: 13,
@@ -196,8 +196,8 @@ export default {
           price: 99,
           portion: 70,
           hasInOrder: false,
-          img: 'static/images/constructor/dorblu.png',
-          icon: 'static/images/icons/dorblu.jpg'
+          img: '../../static/images/constructor/dorblu.png',
+          icon: '../../static/images/icons/dorblu.jpg'
         },
         {
           id: 14,
@@ -206,8 +206,8 @@ export default {
           price: 90,
           portion: 70,
           hasInOrder: false,
-          img: 'static/images/constructor/feta.png',
-          icon: 'static/images/icons/feta.jpg'
+          img: '../../static/images/constructor/feta.png',
+          icon: '../../static/images/icons/feta.jpg'
         },
         {
           id: 15,
@@ -216,8 +216,8 @@ export default {
           price: 39,
           portion: 30,
           hasInOrder: false,
-          img: 'static/images/constructor/olive.png',
-          icon: 'static/images/icons/olive.jpg'
+          img: '../../static/images/constructor/olive.png',
+          icon: '../../static/images/icons/olive.jpg'
         },
         {
           id: 16,
@@ -226,8 +226,8 @@ export default {
           price: 10,
           portion: 5,
           hasInOrder: false,
-          img: 'static/images/constructor/greenery.png',
-          icon: 'static/images/icons/greenery.jpg'
+          img: '../../static/images/constructor/greenery.png',
+          icon: '../../static/images/icons/greenery.jpg'
         }
       ],
       order: {
