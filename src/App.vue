@@ -13,15 +13,16 @@
           <div class="order-item">
             <span>Основа с томатным соусом</span>
             <span>{{ pizzaBase.weight }} г</span>
-            <span>{{ pizzaBase.price }} ₽</span>
+            <span>{{ pizzaBase.price }} <span class="currency">₽</span></span>
           </div>
-           <div class="order-item" v-show="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
+           <div class="order-item" v-if="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
             <span>{{ ingredient.name }} ×{{ getPortionCount(ingredient.id) }}</span>
             <span>{{ ingredient.portion * getPortionCount(ingredient.id)}} г</span>
-            <span>{{ ingredient.price * getPortionCount(ingredient.id)}} ₽</span>
+            <span>{{ ingredient.price * getPortionCount(ingredient.id)}} <span class="currency">₽</span></span>
           </div>
           <div class="order-weight">Общий вес: {{ order.totalWeight }} г</div>
-          <div class="order-sum"><b>Итого: {{ order.fullPrice }} ₽</b></div>
+          <div class="warning" v-if="order.portionLimitExceeded" >Пицца уже содержит 10 порций ингредиентов. Она может не пропечься. Может быть, хотите что-то убрать?</div>
+          <div class="order-sum"><b>Итого: {{ order.fullPrice }} <span class="currency">₽</span></b></div>
         </div>
         <button onclick="alert('Ваш заказ отправлен!'); window.location.reload();">Заказать</button>
       </div>
@@ -191,7 +192,7 @@ export default {
         {
           id: 13,
           tabId: 3,
-          name: 'Сыр "Добрлю"',
+          name: 'Сыр "Дорблю"',
           price: 99,
           portion: 70,
           hasInOrder: false,
@@ -232,7 +233,9 @@ export default {
       order: {
         ingredients: new Map(),
         fullPrice: 0,
-        totalWeight: 0
+        totalWeight: 0,
+        portionCount: 0,
+        portionLimitExceeded: false
       }
     }
   },
@@ -247,25 +250,30 @@ export default {
         portion++
         if (portion > 2) {
           this.removeFromOrder(ingredientId)
-        } else {
+        } else if (this.order.portionCount < 10) {
           this.order.ingredients.set(ingredientId, portion)
           this.pizzaIngredients[ingredientIndex].hasInOrder = true
           this.calcOrderInfo()
+        } else {
+          this.order.portionLimitExceeded = true
         }
       }
     },
     calcOrderInfo: function () {
       let fullPrice = 0
       let totalWeight = 0
+      let portionCount = 0
       for (let ingridient of this.order.ingredients) {
         let ingredientIndex = this.pizzaIngredients.findIndex(ingredient => ingredient.id === ingridient[0])
         if (ingredientIndex !== -1) {
           fullPrice += this.pizzaIngredients[ingredientIndex].price * ingridient[1]
           totalWeight += this.pizzaIngredients[ingredientIndex].portion * ingridient[1]
+          portionCount += ingridient[1]
         }
       }
       this.order.fullPrice = fullPrice + this.pizzaBase.price
       this.order.totalWeight = totalWeight + this.pizzaBase.weight
+      this.order.portionCount = portionCount
     },
     removeFromOrder: function (ingredientId) {
       let ingredientIndex = this.pizzaIngredients.findIndex(ingredient => ingredient.id === ingredientId)
@@ -273,6 +281,9 @@ export default {
         this.order.ingredients.delete(ingredientId)
         this.pizzaIngredients[ingredientIndex].hasInOrder = false
         this.calcOrderInfo()
+        if (this.order.portionLimitExceeded) {
+          this.order.portionLimitExceeded = false
+        }
       }
     },
     getPortionCount: function (ingredientId) {
@@ -301,7 +312,7 @@ export default {
 
 <style>
 #app {
-  font-family: cursive;
+  font-family: Comic Sans MS, Comic Sans, cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -389,6 +400,10 @@ header {
   margin-top: 7px;
 }
 
+.currency {
+  font-family: cursive, Gotham Pro, Helvetica, sans-serif;
+}
+
 button {
   font-size: 25px;
   width: 100%;
@@ -427,6 +442,12 @@ button:hover {
   background-color: #ffdd83;
   border-radius: 5px;
   text-align: center;
+}
+
+.warning {
+  color: #de2d2d;
+  font-size: small;
+  margin-top: 7px;
 }
 
 .ingredients-menu {
