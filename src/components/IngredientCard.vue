@@ -2,7 +2,7 @@
   <div class="ingredient-item" @click="updatePortionCount()">
     <div class="ingredient-view" v-bind:class="{ 'selected-view': ingredient.hasInOrder }">
       <img class="ingredient-icon" :src="ingredient.icon">
-      <span> {{ ingredient.price }} <span class="currency">₽</span></span>
+      <span> {{ ingredient.price }} <span class="currency">&#8381;</span></span>
     </div>
     <div class="ingredient-info" v-bind:class="{ 'selected-info': ingredient.hasInOrder }">
       <div class="main-info">
@@ -117,7 +117,7 @@ export default {
 }
 
 .currency {
-  font-family: cursive, Gotham Pro, Helvetica, sans-serif;
+  font-family: 'PT Sans', serif;
 }
 
 .ingredient-info {

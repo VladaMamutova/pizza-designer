@@ -13,16 +13,16 @@
           <div class="order-item">
             <span>Основа с томатным соусом</span>
             <span>{{ pizzaBase.weight }} г</span>
-            <span>{{ pizzaBase.price }} <span class="currency">₽</span></span>
+            <span>{{ pizzaBase.price }} <span class="currency">&#8381;</span></span>
           </div>
            <div class="order-item" v-if="ingredient.hasInOrder" v-for="ingredient in pizzaIngredients" :key="ingredient.id">
             <span>{{ ingredient.name }} ×{{ getPortionCount(ingredient.id) }}</span>
             <span>{{ ingredient.portion * getPortionCount(ingredient.id)}} г</span>
-            <span>{{ ingredient.price * getPortionCount(ingredient.id)}} <span class="currency">₽</span></span>
+            <span>{{ ingredient.price * getPortionCount(ingredient.id)}} <span class="currency">&#8381;</span></span>
           </div>
           <div class="order-weight">Общий вес: {{ order.totalWeight }} г</div>
           <div class="warning" v-if="order.portionLimitExceeded" >Пицца уже содержит 10 порций ингредиентов. Она может не пропечься. Может быть, хотите что-то убрать?</div>
-          <div class="order-sum"><b>Итого: {{ order.fullPrice }} <span class="currency">₽</span></b></div>
+          <div class="order-sum"><b>Итого: {{ order.fullPrice }} <span class="currency">&#8381;</span></b></div>
         </div>
         <button onclick="alert('Ваш заказ отправлен!'); window.location.reload();">Заказать</button>
       </div>
@@ -401,7 +401,7 @@ header {
 }
 
 .currency {
-  font-family: cursive, Gotham Pro, Helvetica, sans-serif;
+  font-family: 'PT Sans', serif;
 }
 
 button {
